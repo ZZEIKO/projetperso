@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pour toi 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-pink:#f7dbe3;
+  --bg-pink-deep:#f2c6d4;
+  --cream:#fdf6ef;
+  --ink:#5c3a42;
+  --ink-soft:#8a6169;
+  --red:#d3453f;
+  --gold:#c6a06a;
+  --yellow:#f4e6a8;
+  --yellow-ink:#8a7530;
+  --orange:#f0aa7c;
+  --orange-ink:#8a4d24;
+  --blue:#bcdae6;
+  --blue-ink:#2f5b6b;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'Quicksand',sans-serif;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,.4), rgba(255,255,255,0) 55%),
+    radial-gradient(circle at 50% 20%, var(--bg-pink) 0%, var(--bg-pink-deep) 100%);
+  color:var(--ink);
+  overflow:hidden;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif; font-weight:600;}
+.app{
+  position:relative;
+  width:100%;
+  height:100vh;
+  max-width:760px;
+  max-height:900px;
+}
+.screen{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transform:translateY(18px) scale(.98);
+  transition:opacity .6s ease, transform .6s ease, visibility 0s linear .6s;
+  padding:32px;
+}
+.screen.active{
+  opacity:1; visibility:visible; pointer-events:auto;
+  transform:translateY(0) scale(1);
+  transition:opacity .6s ease, transform .6s ease;
+}
+
+/* ---------- SCREEN 1 : ENVELOPPE ---------- */
+.tulip{position:absolute; bottom:14%; width:clamp(38px,9vw,60px); transform-origin:bottom center; animation:sway 4.5s ease-in-out infinite;}
+.tulip.right{animation-delay:-2.2s;}
+@keyframes sway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+.tulip.left{left:8%;}
+.tulip.right{right:8%;}
+.tulip svg{width:100%; filter:drop-shadow(0 4px 6px rgba(0,0,0,.08));}
+
+.envelope-wrap{position:relative; width:min(320px,78vw); aspect-ratio:320/210; cursor:pointer;}
+.envelope-wrap .hint{
+  position:absolute; bottom:-40px; left:50%; transform:translateX(-50%);
+  font-size:.95rem; color:var(--ink-soft); letter-spacing:.02em; white-space:nowrap;
+  animation:pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+.envelope{
+  position:relative; width:100%; height:100%;
+  filter:drop-shadow(0 12px 24px rgba(92,58,66,.18));
+  transition:transform .35s ease;
+}
+.envelope-wrap:hover .envelope{transform:translateY(-4px);}
+.env-back{
+  position:absolute; inset:0; background:#f4f1ee; border-radius:6px;
+}
+.env-flap-back{
+  position:absolute; top:0; left:0; width:100%; height:56%;
+  background:#eae5e0; clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top center; z-index:1;
+}
+.env-pocket{
+  position:absolute; bottom:0; left:0; width:100%; height:66%;
+  background:#ffffff; clip-path:polygon(0 100%,0 22%,50% 60%,100% 22%,100% 100%);
+  z-index:3;
+}
+.env-flap-front{
+  position:absolute; top:0; left:0; width:100%; height:60%;
+  background:#f6f3f0; clip-path:polygon(0 0,100% 0,50% 92%);
+  transform-origin:top center; z-index:4;
+  transition:transform 1s cubic-bezier(.6,-0.2,.3,1.3);
+}
+.heart-seal{
+  position:absolute; top:44%; left:50%; transform:translate(-50%,-50%);
+  width:46px; height:42px; z-index:5; transition:opacity .3s ease, transform .3s ease;
+}
+.heart-seal svg{width:100%; height:100%; filter:drop-shadow(0 3px 4px rgba(0,0,0,.15)); animation:beat 1.8s ease-in-out infinite;}
+@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.14)}24%{transform:scale(1)}36%{transform:scale(1.08)}48%{transform:scale(1)}}
+.letter{
+  position:absolute; left:6%; bottom:-4%; width:88%; height:80%;
+  background:var(--cream); border-radius:4px; z-index:2;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; text-align:center; padding:18px;
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; color:var(--ink);
+  font-size:clamp(1.2rem,5vw,1.55rem); line-height:1.2;
+  transform:translateY(0); transition:transform 1s cubic-bezier(.5,0,.2,1) .15s;
+}
+
+.envelope-wrap.open .env-flap-front{transform:rotateX(180deg);}
+.envelope-wrap.open .heart-seal{opacity:0; transform:translate(-50%,-50%) scale(.4);}
+.letter::after{content:'♥'; color:var(--red); font-style:normal; font-size:1.1rem;}
+.envelope-wrap.open .letter{transform:translateY(-105%) scale(1.06);}
+.envelope-wrap.open .hint{animation:none; opacity:0;}
+.hint{transition:opacity .3s ease;}
+.float-heart{position:absolute; left:50%; top:50%; color:var(--red); pointer-events:none; animation:floatUp 2.4s ease-out forwards;}
+@keyframes floatUp{0%{opacity:0; transform:translate(0,0) scale(.5)}15%{opacity:.9}100%{opacity:0; transform:translate(var(--dx),-240px) scale(1.3)}}
+@media (prefers-reduced-motion:reduce){.tulip,.heart-seal svg{animation:none}}
+
+/* ---------- SCREEN 2 : MENU ---------- */
+.frame{
+  position:relative; width:min(92%,460px); aspect-ratio:3/4;
+  background:var(--cream);
+  clip-path: polygon(4% 2%,10% 0,16% 2%,22% 0,28% 2%,34% 0,40% 2%,46% 0,52% 2%,58% 0,64% 2%,70% 0,76% 2%,82% 0,88% 2%,94% 0,100% 4%,98% 10%,100% 16%,98% 22%,100% 28%,98% 34%,100% 40%,98% 46%,100% 52%,98% 58%,100% 64%,98% 70%,100% 76%,98% 82%,100% 88%,98% 94%,96% 100%,90% 98%,84% 100%,78% 98%,72% 100%,66% 98%,60% 100%,54% 98%,48% 100%,42% 98%,36% 100%,30% 98%,24% 100%,18% 98%,12% 100%,6% 98%,0 96%,2% 90%,0 84%,2% 78%,0 72%,2% 66%,0 60%,2% 54%,0 48%,2% 42%,0 36%,2% 30%,0 24%,2% 18%,0 12%,2% 6%);
+  box-shadow:0 14px 34px rgba(92,58,66,.15);
+  display:flex; align-items:center; justify-content:center;
+}
+.postit{
+  position:absolute;
+  width:26%; aspect-ratio:1;
+  border-radius:3px;
+  box-shadow:0 8px 16px rgba(92,58,66,.2);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transform:translateY(var(--ty,0)) rotate(var(--r,0deg));
+  transition:transform .35s cubic-bezier(.3,1.4,.5,1), box-shadow .3s ease, top .7s ease, left .7s ease, right .7s ease, width .7s ease;
+}
+.postit::after{
+  content:''; position:absolute; right:0; bottom:0; width:0; height:0;
+  border-style:solid; border-width:0 0 13px 13px;
+  border-color:transparent transparent rgba(0,0,0,.15) transparent;
+}
+.postit:hover{
+  transform:translateY(var(--ty,0)) rotate(var(--r,0deg)) scale(1.07);
+  box-shadow:0 12px 22px rgba(92,58,66,.26);
+}
+.postit svg{width:44%; height:44%;}
+.postit.yellow{background:var(--yellow); top:16%; left:12%; --r:-6deg;}
+.postit.orange{background:var(--orange); top:14%; right:10%; --r:5deg;}
+.postit.blue{background:var(--blue); top:48%; left:38%; --r:-3deg;}
+.postit .plabel{
+  position:absolute; bottom:8px; font-size:.72rem; font-weight:600; letter-spacing:.02em;
+}
+.postit.yellow .plabel{color:var(--yellow-ink);}
+.postit.orange .plabel{color:var(--orange-ink);}
+.postit.blue .plabel{color:var(--blue-ink);}
+
+/* ---------- shared: side post-its for switching between sub-screens ---------- */
+.screen[data-sub] .postit{position:absolute; top:50%; width:15%; aspect-ratio:1; --ty:-50%; z-index:30;}
+#screen-vinyl .postit.orange{left:5%; right:auto; --r:-8deg;}
+#screen-vinyl .postit.blue{left:auto; right:5%; --r:7deg;}
+#screen-photos{
+  display:block;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-top:32px;
+  padding-bottom:60px;
+}
+#screen-photos .postit.yellow{left:5%; right:auto; --r:-8deg;}
+#screen-photos .postit.blue{left:auto; right:5%; --r:7deg;}
+#screen-films .postit.yellow{left:5%; right:auto; --r:-8deg;}
+#screen-films .postit.orange{left:auto; right:5%; --r:7deg;}
+.section-caption{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem;
+  color:var(--ink-soft); margin-bottom:18px; text-align:center;
+}
+
+/* ---------- SCREEN 3 : VINYLE ---------- */
+.turntable{
+  width:min(70%,280px); aspect-ratio:1.15;
+  background:linear-gradient(160deg,#3f3a3d,#2a2528);
+  border-radius:14px; position:relative;
+  box-shadow:0 18px 34px rgba(0,0,0,.28);
+  display:flex; align-items:center; justify-content:center;
+}
+.turntable::before{
+  content:''; position:absolute; inset:5%; border-radius:10px;
+  background:radial-gradient(circle at 28% 18%, rgba(255,255,255,.09), transparent 60%);
+  pointer-events:none;
+}
+.disc{
+  width:64%; aspect-ratio:1; border-radius:50%;
+  background:repeating-radial-gradient(circle,#161314 0px,#161314 2px,#0d0b0c 3px,#0d0b0c 5px);
+  position:relative;
+  animation:spin 3.2s linear infinite;
+  animation-play-state:paused;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+  touch-action:none;
+}
+.disc::after{
+  content:''; position:absolute; inset:38%; border-radius:50%;
+  background:var(--red); transition:background .4s ease;
+}
+.disc.face-b::after{background:#5b4b8a;}
+.disc.face-c::after{background:var(--gold);}
+.disc::before{
+  content:''; position:absolute; inset:47%; border-radius:50%; background:#2a2528; z-index:1;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.tonearm{
+  position:absolute; top:8%; right:6%; width:12%; height:46%;
+  transform-origin:top center; transform:rotate(-28deg);
+  transition:transform .18s ease;
+  cursor:grab; touch-action:none;
+}
+.tonearm:active{cursor:grabbing;}
+.tonearm::before{
+  content:''; position:absolute; top:0; left:50%; width:14px; height:14px;
+  background:#d8c9a3; border-radius:50%; transform:translateX(-50%);
+}
+.tonearm::after{
+  content:''; position:absolute; top:6px; left:50%; width:4px; height:96%;
+  background:#d8c9a3; transform:translateX(-50%); border-radius:2px;
+}
+.turntable.flip-pulse{animation:flipPulse .4s ease;}
+@keyframes flipPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(.96) rotate(-2deg);}}
+.caption{margin-top:26px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.15rem; color:var(--ink-soft);}
+.track-title{margin-top:26px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; color:var(--ink); text-align:center;}
+.tap-hint{margin-top:6px; font-size:.8rem; color:var(--ink-soft); opacity:.7; text-align:center;}
+.secret-poem{
+  max-width:360px; margin-top:0; max-height:0; opacity:0; overflow-y:auto;
+  transition:max-height .8s ease, opacity .8s ease, margin-top .8s ease;
+  padding: 0 10px;
+}
+.secret-poem.visible{max-height:450px; opacity:1; margin-top:18px;}
+.secret-poem h3{text-align:center; font-size:1.15rem; margin-bottom:2px;}
+.secret-poem h4{text-align:center; font-size:0.95rem; font-weight:500; font-style:italic; color:var(--ink-soft); margin-bottom:10px;}
+.secret-poem p{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem;
+  line-height:1.5; text-align:center; color:var(--ink);
+}
+.flip-btn{
+  margin-top:22px; padding:10px 20px; border:none; border-radius:22px;
+  background:var(--cream); color:var(--ink); font-family:'Quicksand',sans-serif; font-weight:600;
+  font-size:.9rem; cursor:pointer; box-shadow:0 6px 14px rgba(92,58,66,.14);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.flip-btn:hover{transform:translateY(-2px); box-shadow:0 10px 18px rgba(92,58,66,.18);}
+.flip-btn:active{transform:translateY(0);}
+.volume-control{
+  margin-top:16px; display:flex; align-items:center; gap:10px;
+  font-size:.9rem; color:var(--ink-soft);
+}
+.vol-icon{font-size:1rem;}
+.volume-control input[type="range"]{
+  width:140px; accent-color:var(--red); cursor:pointer;
+}
+
+/* ---------- SCREEN 4 : PHOTOS ---------- */
+.polaroids{
+  position:relative; width:min(94%,560px); height:min(70vh,460px);
+  margin:0 auto;
+}
+.polaroid{
+  position:absolute; width:32%; background:#fff; padding:8px 8px 26px;
+  box-shadow:0 10px 20px rgba(0,0,0,.16); border-radius:2px;
+  cursor:pointer; transition:transform .35s ease, box-shadow .35s ease, z-index 0s;
+  text-align:center;
+}
+.polaroid:hover{box-shadow:0 16px 30px rgba(0,0,0,.22);}
+.polaroid .shot{
+  width:100%; aspect-ratio:1; border-radius:1px; position:relative; overflow:hidden;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.polaroid .photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+.polaroid .shot.has-img .figure{display:none;}
+.polaroid .figure{width:26%; margin-bottom:10%;}
+.polaroid .figure svg{width:100%;}
+.p-paris{top:2%; left:2%; transform:rotate(-7deg); background-image:linear-gradient(160deg,#d9c7a8,#8f7d63);}
+.p-paris .shot{background:linear-gradient(160deg,#e7dcc4,#9c8a6c);}
+.p-ny{top:0%; right:0%; transform:rotate(6deg);}
+.p-ny .shot{background:linear-gradient(160deg,#f3b13c,#d9482b);}
+.p-maldives{top:30%; left:34%; transform:rotate(-2deg); z-index:2;}
+.p-maldives .shot{background:linear-gradient(160deg,#bfe3e0,#3f8fa6);}
+.p-rockies{bottom:0; left:4%; transform:rotate(-5deg);}
+.p-rockies .shot{background:linear-gradient(160deg,#5c6b73,#232b30);}
+.p-tokyo{bottom:2%; right:2%; transform:rotate(8deg);}
+.p-tokyo .shot{background:linear-gradient(160deg,#3a2a5c,#c23a6b);}
+.polaroid.front{transform:scale(1.14) rotate(0deg) !important; z-index:9;}
+
+.photo-poem{margin:34px auto 0;width:100%;max-width:480px;background:repeating-linear-gradient(var(--cream) 0 27px,#e7d9c9 27px 28px);border-radius:8px;padding:22px 26px;box-shadow:0 8px 20px rgba(92,58,66,.12);max-height:0;opacity:0;overflow:hidden;transform:translateY(15px);transition:max-height .9s ease,opacity .8s ease,transform .8s ease;}
+.photo-poem.visible{max-height:700px;opacity:1;transform:translateY(0);}
+.photo-poem h3{text-align:center;font-size:1.25rem;margin-bottom:2px;}
+.photo-poem h4{text-align:center;font-size:1rem;font-weight:500;font-style:italic;color:var(--ink-soft);margin-bottom:12px;}
+.photo-poem p{font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:28px;text-align:center;}
+
+/* ---------- SCREEN 5 : FILMS + POEME ---------- */
+#screen-films{padding-top:32px; padding-bottom:32px;}
+#screen-films .films-scroll{width:100%; height:100%; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding-top:12px; padding-bottom:8px;}
+#screen-films h2{font-size:1.7rem; margin-bottom:22px; text-align:center;}
+.films-grid{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; width:100%; max-width:520px;}
+.film-card{
+  background:var(--cream); border-radius:10px; padding:16px; width:230px;
+  box-shadow:0 8px 20px rgba(92,58,66,.12);
+}
+.film-card .tag{font-size:.7rem; letter-spacing:.06em; color:var(--ink-soft); margin-bottom:4px;}
+.film-card h3{font-size:1.2rem; margin-bottom:8px;}
+.film-poster{
+  width:100%; aspect-ratio:2/3; border-radius:6px; margin-bottom:10px;
+  position:relative; overflow:hidden;
+}
+.film-poster img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.film-poster.spiderverse{background:linear-gradient(160deg,#2c1b6b,#c2237a);}
+.film-poster.coeur{background:linear-gradient(160deg,#8a5a2b,#c9797a);}
+.film-meta{font-size:.85rem; color:var(--ink-soft); margin-bottom:6px;}
+.film-meta b{color:var(--ink);}
+.film-comment{font-size:.85rem; font-style:italic; line-height:1.4;}
+
+.poem{
+  margin-top:34px; width:100%; max-width:480px;
+  background:
+    repeating-linear-gradient(var(--cream) 0 27px, #e7d9c9 27px 28px);
+  border-radius:8px; padding:22px 26px;
+  box-shadow:0 8px 20px rgba(92,58,66,.12);
+}
+.poem h3{text-align:center; font-size:1.25rem; margin-bottom:2px;}
+.poem h4{text-align:center; font-size:1rem; font-weight:500; font-style:italic; color:var(--ink-soft); margin-bottom:12px;}
+.poem p{font-family:'Cormorant Garamond',serif; font-size:1.1rem; line-height:28px; text-align:center;}
+
+@media (max-width:480px){
+  .postit{width:30%;}
+  .film-card{width:100%; max-width:280px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <section id="screen-envelope" class="screen active">
+    <div class="tulip left">
+      <svg viewBox="0 0 60 120"><path d="M30 120 30 55" stroke="#7a9e5c" stroke-width="4" fill="none"/><path d="M18 70 Q30 55 30 55 Q30 55 42 70" stroke="#7a9e5c" stroke-width="4" fill="none"/><path d="M30 55 C10 45 12 15 30 5 C48 15 50 45 30 55Z" fill="#d97fa0"/></svg>
+    </div>
+    <div class="envelope-wrap" id="envelopeBtn">
+      <div class="envelope">
+        <div class="letter">Pour la plus jolie des filles !</div>
+        <div class="env-back"></div>
+        <div class="env-flap-back"></div>
+        <div class="env-pocket"></div>
+        <div class="env-flap-front"></div>
+        <div class="heart-seal"><svg viewBox="0 0 32 28"><path d="M16 28C6 20 0 13 0 7 0 2 4 0 8 0c3 0 6 2 8 5 2-3 5-5 8-5 4 0 8 2 8 7 0 6-6 13-16 21z" fill="#d3453f"/></svg></div>
+      </div>
+      <p class="hint">Touche l'enveloppe</p>
+    </div>
+    <div class="tulip right">
+      <svg viewBox="0 0 60 120"><path d="M30 120 30 55" stroke="#7a9e5c" stroke-width="4" fill="none"/><path d="M18 70 Q30 55 30 55 Q30 55 42 70" stroke="#7a9e5c" stroke-width="4" fill="none"/><path d="M30 55 C10 45 12 15 30 5 C48 15 50 45 30 55Z" fill="#d97fa0"/></svg>
+    </div>
+  </section>
+
+  <section id="screen-menu" class="screen">
+    <div class="frame">
+      <div class="postit yellow" data-target="vinyl">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1c1c1c"/><circle cx="12" cy="12" r="3.4" fill="var(--red)"/><circle cx="12" cy="12" r="1.1" fill="#1c1c1c"/></svg>
+        <span class="plabel">Musique</span>
+      </div>
+      <div class="postit orange" data-target="photos">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2" fill="#1c1c1c"/><rect x="8" y="3" width="8" height="4" rx="1" fill="#1c1c1c"/><circle cx="12" cy="13" r="4.4" fill="var(--orange)"/></svg>
+        <span class="plabel">Souvenirs</span>
+      </div>
+      <div class="postit blue" data-target="films">
+        <svg viewBox="0 0 24 24"><rect x="2" y="9" width="20" height="12" rx="1.5" fill="#1c1c1c"/><path d="M2 9l3-5h4l-3 5zM9 9l3-5h4l-3 5zM16 9l3-5h3l-3 5z" fill="#1c1c1c"/></svg>
+        <span class="plabel">Films</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-vinyl" class="screen" data-sub>
+    <div class="postit orange" data-target="photos">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2" fill="#1c1c1c"/><rect x="8" y="3" width="8" height="4" rx="1" fill="#1c1c1c"/><circle cx="12" cy="13" r="4.4" fill="var(--orange)"/></svg>
+      <span class="plabel">Souvenirs</span>
+    </div>
+    <div class="postit blue" data-target="films">
+      <svg viewBox="0 0 24 24"><rect x="2" y="9" width="20" height="12" rx="1.5" fill="#1c1c1c"/><path d="M2 9l3-5h4l-3 5zM9 9l3-5h4l-3 5zM16 9l3-5h3l-3 5z" fill="#1c1c1c"/></svg>
+      <span class="plabel">Films</span>
+    </div>
+    <p class="section-caption" id="soundsCaption">Nos sons</p>
+    <div class="turntable" id="turntable">
+      <div class="disc" id="disc"></div>
+      <div class="tonearm" id="tonearm"></div>
+    </div>
+    <p class="track-title" id="trackTitle">Beggin' — Madcon</p>
+    <p class="tap-hint">Dépose l'aiguille sur le disque pour lancer la lecture</p>
+    
+    <div class="secret-poem" id="secretPoem">
+      
+      <h3><br>1er poème</h3>
+      <h4>Connections?</h4>
+      <p>
+        Il y a des chansons qui ne sont pas que des chansons,<br>
+        des mélodies qui finissent par garder nos souvenirs,<br>
+        des paroles qui prennent un autre sens<br>
+        quand elles se retrouvent liées à quelqu'un.<br><br>
+        Il y a d'abord celle qui donne envie de se rapprocher,<br>
+        de chercher une présence,<br>
+        de trouver cette personne qui, sans le savoir,<br>
+        commence déjà à prendre une place particulière.<br><br>
+        Puis vient celle qui nous apprend à laisser faire les choses,<br>
+        à ne pas chercher à tout prévoir,<br>
+        à simplement profiter de ce qui arrive,<br>
+        sans savoir encore où cela nous mènera.<br><br>
+        Et puis il y a Swimming Pools.<br>
+        Celle qui, pour nous, n'est pas simplement un morceau,<br>
+        mais le début d'une histoire.<br>
+        Une discussion parmi tant d'autres,<br>
+        qui aurait pu rester une simple conversation,<br>
+        et qui pourtant a fini par devenir quelque chose de bien plus grand.<br><br>
+        Depuis, chaque chanson semble avoir son propre souvenir,<br>
+        son propre petit morceau de notre histoire.<br>
+        Et peut-être que c'est ça que j'aime dans la musique :<br>
+        elle sait garder les moments que l'on ne pense pas à garder.<br>
+        Quelques notes suffisent parfois<br>
+        pour nous ramener à un sourire,<br>
+        à une conversation,<br>
+        à une personne.<br><br>
+        Alors quand ces trois chansons jouent,<br>
+        je n'entends pas seulement de la musique.<br>
+        J'entends un début,<br>
+        des souvenirs,<br>
+        des petits moments,<br>
+        et quelque part entre toutes ces notes,<br>
+        j'entends un peu de nous.
+      </p>
+    </div>
+
+    <button class="flip-btn" id="flipBtn">Retourner le disque · Face <span id="faceLabel">A</span></button>
+    <div class="volume-control">
+      <span class="vol-icon">♪</span>
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8">
+    </div>
+    <audio id="audioA" src="audio/beggin.mp3" preload="none" loop></audio>
+    <audio id="audioB" src="audio/let-it-happen.mp3" preload="none" loop></audio>
+    <audio id="audioC" src="audio/swimming-pools.mp3" preload="none" loop></audio>
+  </section>
+
+  <section id="screen-photos" class="screen" data-sub>
+    <div class="postit yellow" data-target="vinyl">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1c1c1c"/><circle cx="12" cy="12" r="3.4" fill="var(--red)"/><circle cx="12" cy="12" r="1.1" fill="#1c1c1c"/></svg>
+      <span class="plabel">Musique</span>
+    </div>
+    <div class="postit blue" data-target="films">
+      <svg viewBox="0 0 24 24"><rect x="2" y="9" width="20" height="12" rx="1.5" fill="#1c1c1c"/><path d="M2 9l3-5h4l-3 5zM9 9l3-5h4l-3 5zM16 9l3-5h3l-3 5z" fill="#1c1c1c"/></svg>
+      <span class="plabel">Films</span>
+    </div>
+    <p class="section-caption">Des photos pas comme les autres</p>
+    <div class="polaroids">
+      <div class="polaroid p-paris"><div class="shot"><img class="photo" src="images/cookiee.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="if(this.src.endsWith('.png')){this.src='images/cookiee.jpg';}else{this.style.display='none';this.onerror=null;}"><div class="figure"><svg viewBox="0 0 20 40"><circle cx="10" cy="6" r="5" fill="#1c1c1c"/><line x1="10" y1="11" x2="10" y2="28" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="2" y2="22" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="18" y2="14" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="4" y2="38" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="16" y2="38" stroke="#1c1c1c" stroke-width="2.5"/></svg></div></div></div>
+      <div class="polaroid p-ny"><div class="shot"><img class="photo" src="images/pull.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="if(this.src.endsWith('.png')){this.src='images/pull.jpg';}else{this.style.display='none';this.onerror=null;}"><div class="figure"><svg viewBox="0 0 20 40"><circle cx="10" cy="6" r="5" fill="#1c1c1c"/><line x1="10" y1="11" x2="10" y2="28" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="2" y2="20" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="18" y2="20" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="4" y2="38" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="16" y2="38" stroke="#1c1c1c" stroke-width="2.5"/></svg></div></div></div>
+      <div class="polaroid p-maldives"><div class="shot"><img class="photo" src="images/tuture.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="if(this.src.endsWith('.png')){this.src='images/tuture.jpg';}else{this.style.display='none';this.onerror=null;}"><div class="figure"><svg viewBox="0 0 20 40"><circle cx="10" cy="6" r="5" fill="#1c1c1c"/><line x1="10" y1="11" x2="10" y2="24" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="2" y2="18" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="18" y2="18" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="24" x2="0" y2="26" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="24" x2="20" y2="26" stroke="#1c1c1c" stroke-width="2.5"/></svg></div></div></div>
+      <div class="polaroid p-rockies"><div class="shot"><img class="photo" src="images/tulipe.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="if(this.src.endsWith('.png')){this.src='images/tulipe.jpg';}else{this.style.display='none';this.onerror=null;}"><div class="figure"><svg viewBox="0 0 20 40"><circle cx="10" cy="6" r="5" fill="#1c1c1c"/><line x1="10" y1="11" x2="10" y2="28" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="4" y2="12" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="18" y2="14" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="4" y2="38" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="16" y2="38" stroke="#1c1c1c" stroke-width="2.5"/></svg></div></div></div>
+      <div class="polaroid p-tokyo"><div class="shot"><img class="photo" src="images/peluche.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="if(this.src.endsWith('.png')){this.src='images/peluche.jpg';}else{this.style.display='none';this.onerror=null;}"><div class="figure"><svg viewBox="0 0 20 40"><circle cx="10" cy="6" r="5" fill="#1c1c1c"/><line x1="10" y1="11" x2="10" y2="28" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="2" y2="20" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="16" x2="18" y2="20" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="4" y2="38" stroke="#1c1c1c" stroke-width="2.5"/><line x1="10" y1="28" x2="16" y2="38" stroke="#1c1c1c" stroke-width="2.5"/></svg></div></div></div>
+    </div>
+    <div class="photo-poem" id="photoPoem">
+      <h3>3ème poème</h3>
+      <h4>Présence</h4>
+      <p>On dit souvent que la présence est le fondement d’une relation,<br>qu’il faut être là pour partager les instants,<br>les rires, les silences et les souvenirs.<br><br>Mais parfois, peu importe les rivages qui nous séparent,<br>certaines personnes trouvent une façon de rester près de nous.<br><br>Alors, sans même y penser,<br>je te retrouve dans les petits moments de ma vie :<br>dans un sourire, une chanson, une photo,<br>ou simplement dans ces instants où je pense à toi.<br><br>Et peut-être que, de ton côté,<br>je me glisse aussi quelque part dans tes journées,<br>sans que tu t’en rendes compte.<br><br>Parce qu’au fond, être présent,<br>ce n’est pas toujours être à côté.<br><br>C’est continuer d’exister<br>dans la mémoire de l’autre,<br>jusqu’à devenir une présence<br>que la distance ne peut pas effacer.</p>
+    </div>
+  </section>
+
+  <section id="screen-films" class="screen" data-sub>
+    <div class="postit yellow" data-target="vinyl">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1c1c1c"/><circle cx="12" cy="12" r="3.4" fill="var(--red)"/><circle cx="12" cy="12" r="1.1" fill="#1c1c1c"/></svg>
+      <span class="plabel">Musique</span>
+    </div>
+    <div class="postit orange" data-target="photos">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2" fill="#1c1c1c"/><rect x="8" y="3" width="8" height="4" rx="1" fill="#1c1c1c"/><circle cx="12" cy="13" r="4.4" fill="var(--orange)"/></svg>
+      <span class="plabel">Souvenirs</span>
+    </div>
+    <div class="films-scroll">
+      <h2>Nos deux films préférés</h2>
+      <div class="films-grid">
+        <div class="film-card">
+          <div class="tag">MON FILM PRÉFÉRÉ</div>
+          <div class="film-poster spiderverse">
+            <img src="images/spiderverse-poster.jpg" alt="" onerror="if(this.src.endsWith('.jpg')){this.src='images/spiderverse-poster.png';}else{this.style.display='none';this.onerror=null;}">
+          </div>
+          <h3>Spider-Man: Into the Spider-Verse</h3>
+          <div class="film-meta">Genre : <b>Animation / Super-héros</b></div>
+          <div class="film-meta">Note : <b>9.9/10</b></div>
+          <div class="film-comment">Je l'ai adoré car il représente la prise de confiance en soi.</div>
+        </div>
+        <div class="film-card">
+          <div class="tag">TON FILM PRÉFÉRÉ</div>
+          <div class="film-poster coeur">
+            <img src="images/coeur-poster.jpg" alt="" onerror="if(this.src.endsWith('.jpg')){this.src='images/coeur-poster.png';}else{this.style.display='none';this.onerror=null;}">
+          </div>
+          <h3>Jack et la Mécanique du Cœur</h3>
+          <div class="film-meta">Genre : <b>Fantastique / Romance</b></div>
+          <div class="film-meta">Note : <b>10/10</b></div>
+          <div class="film-comment">Il représente si bien les dangers d'accepter d'aimer quelqu'un.</div>
+        </div>
+      </div>
+      <div class="poem">
+        <h3>2ème poeme</h3>
+        <h4>en équilibre?</h4>
+        <p>
+          Avant toi, je n'osais pas sauter dans le vide,<br>
+          J'avais peur de tomber sans savoir qui j'étais.<br>
+          Puis tu es arrivée, discrète et solide,<br>
+          Et j'ai appris à croire en ce que je devenais.<br>
+          On sait tous les deux que le cœur est fragile,<br>
+          Qu'aimer, c'est accepter de pouvoir se briser.<br>
+          Mais entre nous deux, ce risque est devenu facile :<br>
+          Je choisis encore ton cœur, sans hésiter.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const screens = {
+  menu: document.getElementById('screen-menu'),
+  vinyl: document.getElementById('screen-vinyl'),
+  photos: document.getElementById('screen-photos'),
+  films: document.getElementById('screen-films'),
+};
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+}
+
+document.getElementById('envelopeBtn').addEventListener('click', function(){
+  if(this.classList.contains('open')) return;
+  this.classList.add('open');
+  const scr = document.getElementById('screen-envelope');
+  for(let i = 0; i < 10; i++){
+    const h = document.createElement('span');
+    h.className = 'float-heart';
+    h.textContent = '♥';
+    h.style.setProperty('--dx', (Math.random() * 300 - 150) + 'px');
+    h.style.fontSize = (0.9 + Math.random() * 1.1) + 'rem';
+    h.style.animationDelay = (0.3 + Math.random() * 0.9) + 's';
+    scr.appendChild(h);
+    setTimeout(() => h.remove(), 3600);
+  }
+  setTimeout(() => showScreen('menu'), 2800);
+});
+
+document.querySelectorAll('[data-target]').forEach(el => {
+  el.addEventListener('click', () => showScreen(el.dataset.target));
+});
+
+// ---- Tourne-disque : aiguille manuelle + retournement Face A/B ----
+const turntable = document.getElementById('turntable');
+const disc = document.getElementById('disc');
+const tonearm = document.getElementById('tonearm');
+const flipBtn = document.getElementById('flipBtn');
+const faceLabel = document.getElementById('faceLabel');
+const trackTitle = document.getElementById('trackTitle');
+const secretPoem = document.getElementById('secretPoem');
+const soundsCaption = document.getElementById('soundsCaption');
+const audioA = document.getElementById('audioA');
+const audioB = document.getElementById('audioB');
+const audioC = document.getElementById('audioC');
+const volumeSlider = document.getElementById('volumeSlider');
+audioA.volume = audioB.volume = audioC.volume = parseFloat(volumeSlider.value);
+volumeSlider.addEventListener('input', () => {
+  audioA.volume = audioB.volume = audioC.volume = parseFloat(volumeSlider.value);
+});
+
+const ANGLE_RAISED = -28, ANGLE_LOWERED = 4;
+let currentFace = 'A';
+let needleLowered = false;
+let dragging = false, dragMoved = false, startX = 0, startY = 0;
+
+const tracks = {
+  A: { title: "Beggin' — Madcon", audio: audioA },
+  B: { title: 'Let It Happen — Tame Impala', audio: audioB },
+  C: { title: 'Swimming Pools (Drank) — Kendrick Lamar', audio: audioC },
+};
+function currentTrack(){ return tracks[currentFace]; }
+
+function setArmAngle(deg){ tonearm.style.transform = `rotate(${deg}deg)`; }
+
+function applyNeedleState(lowered){
+  needleLowered = lowered;
+  setArmAngle(lowered ? ANGLE_LOWERED : ANGLE_RAISED);
+  disc.style.animationPlayState = lowered ? 'running' : 'paused';
+  const audio = currentTrack().audio;
+  if(lowered){ audio.play().catch(() => {}); }
+  else{ audio.pause(); }
+}
+
+function pointerAngle(e){
+  const rect = tonearm.getBoundingClientRect();
+  const pivotX = rect.left + rect.width / 2;
+  const pivotY = rect.top;
+  const x = e.clientX - pivotX;
+  const y = e.clientY - pivotY;
+  const deg = Math.atan2(x, y) * 180 / Math.PI;
+  return Math.max(ANGLE_RAISED, Math.min(ANGLE_LOWERED, deg));
+}
+
+tonearm.addEventListener('pointerdown', e => {
+  dragging = true; dragMoved = false;
+  startX = e.clientX; startY = e.clientY;
+  tonearm.setPointerCapture(e.pointerId);
+});
+tonearm.addEventListener('pointermove', e => {
+  if(!dragging) return;
+  if(Math.abs(e.clientX - startX) + Math.abs(e.clientY - startY) > 4) dragMoved = true;
+  setArmAngle(pointerAngle(e));
+});
+tonearm.addEventListener('pointerup', e => {
+  if(!dragging) return;
+  dragging = false;
+  if(dragMoved){
+    const deg = pointerAngle(e);
+    applyNeedleState(deg > (ANGLE_RAISED + ANGLE_LOWERED) / 2);
+  } else {
+    applyNeedleState(!needleLowered);
+  }
+});
+
+function updateFaceUI(){
+  faceLabel.textContent = currentFace;
+  disc.classList.toggle('face-b', currentFace === 'B');
+  disc.classList.toggle('face-c', currentFace === 'C');
+  trackTitle.textContent = currentTrack().title;
+  secretPoem.classList.toggle('visible', currentFace === 'C');
+  soundsCaption.textContent = currentFace === 'C' ? 'Notre son' : 'Nos sons';
+  turntable.classList.add('flip-pulse');
+  setTimeout(() => turntable.classList.remove('flip-pulse'), 400);
+}
+
+flipBtn.addEventListener('click', () => {
+  applyNeedleState(false);
+  currentFace = currentFace === 'B' ? 'A' : 'B';
+  updateFaceUI();
+});
+
+// ---- geste secret : appui long sur le disque révèle la face C ----
+let holdTimer = null;
+disc.addEventListener('pointerdown', () => {
+  holdTimer = setTimeout(() => {
+    applyNeedleState(false);
+    currentFace = 'C';
+    updateFaceUI();
+  }, 1400);
+});
+['pointerup', 'pointerleave', 'pointercancel'].forEach(evt => {
+  disc.addEventListener(evt, () => {
+    if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
+  });
+});
+
+const polaroids = document.querySelectorAll('.polaroid');
+const photoPoem = document.getElementById('photoPoem');
+const clickedPhotos = new Set();
+
+polaroids.forEach((p, index) => {
+  p.addEventListener('click', () => {
+    const wasFront = p.classList.contains('front');
+    polaroids.forEach(o => o.classList.remove('front'));
+    if(!wasFront) p.classList.add('front');
+    clickedPhotos.add(index);
+    if(clickedPhotos.size === polaroids.length) photoPoem.classList.add('visible');
+  });
+});
+</script>
+</body>
+</html>
